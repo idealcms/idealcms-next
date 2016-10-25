@@ -1,18 +1,18 @@
 {
-    "name": ":vendor/:package_name",
+    "name": "idealcms/idealcms",
     "type": "library",
-    "description": ":package_description",
+    "description": "Ideal CMS с открытым исходным кодом, написанная на PHP 7.",
     "keywords": [
-        ":vendor",
-        ":package_name"
+        "idealcms",
+        "idealcms"
     ],
-    "homepage": "https://github.com/:vendor/:package_name",
+    "homepage": "https://github.com/idealcms/idealcms",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": ":author_email",
-            "homepage": ":author_website",
+            "name": "Paul Nikitin",
+            "email": "top@neox.ru",
+            "homepage": "http://idealcms.ru/",
             "role": "Developer"
         }
     ],
@@ -25,12 +25,12 @@
     },
     "autoload": {
         "psr-4": {
-            ":vendor\\:package_name\\": "src"
+            "idealcms\\idealcms\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            ":vendor\\:package_name\\": "tests"
+            "idealcms\\idealcms\\": "tests"
         }
     },
     "scripts": {
