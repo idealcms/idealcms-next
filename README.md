@@ -22,10 +22,10 @@
 
 ## Установка
 
-С помощью Composer
+На период разработки установка с помощью Composer производится командой
 
 ``` bash
-$ composer require idealcms/idealcms
+$ composer require idealcms/idealcms ^4.0@dev
 ```
 
 ## Использование
