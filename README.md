@@ -1,4 +1,4 @@
-# idealcms
+# Ideal CMS v. 4
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
@@ -7,43 +7,52 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-**Note:** Replace ```Paul Nikitin``` ```idealcms``` ```http://idealcms.ru/``` ```top@neox.ru``` ```idealcms``` ```idealcms``` ```Ideal CMS с открытым исходным кодом, написанная на PHP 7.``` with their correct values in [README.md](README.md), [CHANGELOG.md](CHANGELOG.md), [CONTRIBUTING.md](CONTRIBUTING.md), [LICENSE.md](LICENSE.md) and [composer.json](composer.json) files, then delete this line. You can run `$ php prefill.php` in the command line to make all replacements at once. Delete the file prefill.php as well.
+Используемые технологии и продукты:
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what
-PSRs you support to avoid any confusion with users and contributors.
+* PHP 7+,
+* MySQL 4+, 
+* MVC, 
+* PSR-0, PSR-2, PSR-7
+* Twig, 
+* jQuery,
+* Twitter Bootstrap 3,
+* CKEditor,
+* CKFinder, 
+* FirePHP.
 
-## Install
+## Установка
 
-Via Composer
+С помощью Composer
 
 ``` bash
 $ composer require idealcms/idealcms
 ```
 
-## Usage
+## Использование
+
+Чуть позже тут будет информация об использовании CMS
 
 ``` php
-$skeleton = new idealcms\idealcms();
-echo $skeleton->echoPhrase('Hello, League!');
+echo 'Hello World';
 ```
 
 ## Change log
 
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
+Вся информация об изменениях содержится в файле [CHANGELOG](CHANGELOG.md).
 
-## Testing
+## Тестирование
 
 ``` bash
 $ composer test
 ```
 
-## Contributing
+## Сотрудничество
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) and [CONDUCT](CONDUCT.md) for details.
+Подробнее в файле [CONTRIBUTING](CONTRIBUTING.md) and [CONDUCT](CONDUCT.md).
 
-## Security
+## Безопасность
 
-If you discover any security related issues, please email top@neox.ru instead of using the issue tracker.
+Если вы обнаружите проблему, связанную с безопасностью системы, пожалуйста, не оставляйте issue в багтрекере, а напишите по адресу top@neox.ru
 
 ## Credits
 
@@ -52,10 +61,10 @@ If you discover any security related issues, please email top@neox.ru instead of
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+GNU Lesser General Public License v3.0 (GNU LGPL v3). Please see [License File](LICENSE.md) for more information.
 
 [ico-version]: https://img.shields.io/packagist/v/idealcms/idealcms.svg?style=flat-square
-[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
+[ico-license]: https://img.shields.io/badge/license-LGPL-blue.svg?style=flat-square
 [ico-travis]: https://img.shields.io/travis/idealcms/idealcms/master.svg?style=flat-square
 [ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/idealcms/idealcms.svg?style=flat-square
 [ico-code-quality]: https://img.shields.io/scrutinizer/g/idealcms/idealcms.svg?style=flat-square
