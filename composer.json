@@ -19,7 +19,7 @@
     "require": {
         "php" : "^7.3",
         "laminas/laminas-diactoros": "^2.2",
-        "relay/relay": "^1.1"
+        "relay/relay": "~2.0"
     },
     "require-dev": {
         "phpunit/phpunit" : "^latest",
