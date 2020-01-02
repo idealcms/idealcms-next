@@ -9,8 +9,8 @@ namespace Ideal\Core\Admin;
 
 use Ideal\Core\Config;
 use Ideal\Core\Di;
-use Zend\Diactoros\Response;
-use Zend\Diactoros\ServerRequest;
+use Laminas\Diactoros\Response;
+use Laminas\Diactoros\ServerRequest;
 
 class Router
 {

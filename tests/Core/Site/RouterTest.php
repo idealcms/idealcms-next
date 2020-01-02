@@ -3,7 +3,7 @@ namespace Ideal\Core\Site;
 
 use PHPUnit\Framework\TestCase;
 use Relay\Runner;
-use Zend\Diactoros\Response;
+use Laminas\Diactoros\Response;
 
 class RouterTest extends TestCase
 {
@@ -19,8 +19,8 @@ class RouterTest extends TestCase
         $next->method('__invoke')
              ->willReturn($testResponse);
 
-        $request = (new \Zend\Diactoros\ServerRequest())
-            ->withUri(new \Zend\Diactoros\Uri('http://example.com/test'))
+        $request = (new \Laminas\Diactoros\ServerRequest())
+            ->withUri(new \Laminas\Diactoros\Uri('http://example.com/test'))
             ->withMethod('GET');
 
         $result = $router($request, $response, $next);

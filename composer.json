@@ -18,7 +18,7 @@
     ],
     "require": {
         "php" : "^7.3",
-        "zendframework/zend-diactoros": "^2.1",
+        "laminas/laminas-diactoros": "^2.2",
         "relay/relay": "^1.1",
         "php-di/php-di": "^6.0"
     },

@@ -9,8 +9,9 @@ namespace Ideal\Core;
 
 use Exception;
 use Relay\Runner;
-use Zend\Diactoros\Response;
-use Zend\Diactoros\ServerRequestFactory;
+use Laminas\Diactoros\Response;
+use Laminas\Diactoros\ServerRequest;
+use Laminas\Diactoros\ServerRequestFactory;
 
 /**
  * Front Controller реализует обработку HTTP-запросов в соответствии со стандартом PSR-7

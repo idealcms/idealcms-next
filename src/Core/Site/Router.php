@@ -8,8 +8,8 @@
 namespace Ideal\Core\Site;
 
 use Relay\Runner;
-use Zend\Diactoros\ServerRequest;
-use Zend\Diactoros\Response;
+use Laminas\Diactoros\ServerRequest;
+use Laminas\Diactoros\Response;
 
 class Router
 {

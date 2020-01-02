@@ -27,10 +27,10 @@ class FrontControllerTest extends TestCase
 
 class TestFrontController extends FrontController
 {
-    protected function getRequest(): \Zend\Diactoros\ServerRequest
+    protected function getRequest(): \Laminas\Diactoros\ServerRequest
     {
-        $request = (new \Zend\Diactoros\ServerRequest())
-            ->withUri(new \Zend\Diactoros\Uri('http://example.com/'))
+        $request = (new \Laminas\Diactoros\ServerRequest())
+            ->withUri(new \Laminas\Diactoros\Uri('http://example.com/'))
             ->withMethod('GET');
 
         return $request;
