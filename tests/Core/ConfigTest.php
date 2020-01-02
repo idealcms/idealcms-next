@@ -6,14 +6,14 @@ use PHPUnit\Framework\TestCase;
 
 class ConfigTest extends TestCase
 {
-    public function testImport()
+    public function testImport(): void
     {
         $config = new Config();
 
         $config->import(['test' => 'value']);
-        $this->assertContains('value', $config->test);
+        $this->assertStringContainsString('value', $config->test);
 
         $config->import(['test' => 'value2']);
-        $this->assertContains('value2', $config->test);
+        $this->assertStringContainsString('value2', $config->test);
     }
 }

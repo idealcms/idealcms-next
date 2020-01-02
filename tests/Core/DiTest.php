@@ -6,9 +6,9 @@ use Ideal\Core\Di;
 
 class DiTest extends TestCase
 {
-    public function testCreateDice()
+    public function testCreateDice(): void
     {
         $dice = Di::getInstance();
-        $this->assertInstanceOf('DI\Container', $dice);
+        $this->assertInstanceOf('Ideal\Core\Di', $dice);
     }
 }

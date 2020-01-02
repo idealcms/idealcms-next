@@ -7,21 +7,20 @@ use PHPUnit\Framework\TestCase;
 
 class FrontControllerTest extends TestCase
 {
-    public function testRun()
+    public function testRun(): void
     {
         $di = Di::getInstance();
-        $di->set('Ideal\Core\Config', \DI\create('Ideal\Test\TestConfig'));
+        $di->set('Ideal\Core\Config', 'Ideal\Test\TestConfig');
 
         ob_start();
         $fc = new TestFrontController();
         $fc->run('');
-        $print = ob_get_contents();
-        ob_end_clean();
+        $print = ob_get_clean();
 
-        $this->assertContains('class1 start ', $print);
-        $this->assertContains('class1 end ', $print);
-        $this->assertContains('class2 start ', $print);
-        $this->assertContains('class2 end ', $print);
+        $this->assertStringContainsString('class1 start ', $print);
+        $this->assertStringContainsString('class1 end ', $print);
+        $this->assertStringContainsString('class2 start ', $print);
+        $this->assertStringContainsString('class2 end ', $print);
     }
 }
 
@@ -48,7 +47,7 @@ class TestConfig extends \Ideal\Core\Config
         return $value;
     }
 
-    public function load(string $root)
+    public function load(string $root): void
     {
     }
 
