@@ -7,6 +7,7 @@
  */
 namespace Ideal\Core;
 
+use Exception;
 use Relay\Runner;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequestFactory;
@@ -23,9 +24,9 @@ class FrontController
      * Проводится роутинг, определяется контроллер страницы и отображаемый текст.
      * Выводятся HTTP-заголовки и отображается текст, сгенерированный с помощью view в controller
      * @param string $webRoot
-     * @throws \Exception
+     * @throws Exception
      */
-    public function run(string $webRoot)
+    public function run(string $webRoot): void
     {
         // Определяем корневую папку всей системы
         $root = stream_resolve_include_path($webRoot . '/../');
@@ -50,7 +51,7 @@ class FrontController
         $response = new Response();
 
         // Запускаем обработку очереди middleware
-        $resolver = function ($class) {
+        $resolver = static function ($class) {
             return new $class();
         };
 
@@ -65,7 +66,12 @@ class FrontController
         echo $response->getBody();
     }
 
-    protected function getRequest(): \Zend\Diactoros\ServerRequest
+    /**
+     * Метод для возможности переопределения объекта Request для тестов
+     *
+     * @return ServerRequest
+     */
+    protected function getRequest(): ServerRequest
     {
         return ServerRequestFactory::fromGlobals();
     }

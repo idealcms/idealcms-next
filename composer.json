@@ -12,12 +12,12 @@
         {
             "name": "Paul Nikitin",
             "email": "top@neox.ru",
-            "homepage": "http://idealcms.ru/",
+            "homepage": "https://idealcms.ru/",
             "role": "Developer"
         }
     ],
     "require": {
-        "php" : "^7.1",
+        "php" : "^7.3",
         "zendframework/zend-diactoros": "^2.1",
         "relay/relay": "^1.1",
         "php-di/php-di": "^6.0"
@@ -43,7 +43,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "5.0.x-dev"
+            "dev-master": "7.0.x-dev"
         }
     },
     "config": {

@@ -31,7 +31,6 @@ class Router
             $response = $next($request, $response);
         }
 
-        // NOT OPTIONAL: return the Response to the previous middleware
         return $response;
     }
 }

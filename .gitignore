@@ -1,4 +1,0 @@
-# Не включаем в репозиторий настройки PhpStorm
-.idea/
-vendor/
-composer.lock

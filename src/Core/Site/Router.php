@@ -7,27 +7,26 @@
  */
 namespace Ideal\Core\Site;
 
+use Relay\Runner;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Response;
 
 class Router
 {
     /**
-     * @param \Zend\Diactoros\ServerRequest $request
-     * @param \Zend\Diactoros\Response $response
-     * @param \Relay\Runner $next
-     * @return \Zend\Diactoros\Response
+     * @param ServerRequest $request
+     * @param Response $response
+     * @param Runner $next
+     * @return Response
      */
     public function __invoke(ServerRequest $request, Response $response, $next): Response
     {
         // Write to the response body:
         $response->getBody()->write("site content\n");
-        //$response->getBody()->write("<pre>" . print_r($request, true) . '</pre>');
 
-        // optionally invoke the $next middleware and get back a new response
-        $response = $next($request, $response);
+        /** @var Response $response */
+        $response = $next($request, $response); // вызов следующего middleware в очереди
 
-        // NOT OPTIONAL: return the Response to the previous middleware
         return $response;
     }
 }

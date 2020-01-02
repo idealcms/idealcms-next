@@ -1,4 +1,4 @@
-# Ideal CMS v. 4
+# Ideal CMS v. 7
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
@@ -9,7 +9,7 @@
 
 Используемые технологии и продукты:
 
-* PHP 7+,
+* PHP 7.3+,
 * MySQL 4+, 
 * MVC, 
 * PSR-0, PSR-2, PSR-7
@@ -25,7 +25,7 @@
 На период разработки установка с помощью Composer производится командой
 
 ``` bash
-$ composer require idealcms/idealcms ^4.0@dev
+$ composer require idealcms/idealcms dev-master
 ```
 
 ## Использование

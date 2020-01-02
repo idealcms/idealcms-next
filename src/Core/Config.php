@@ -58,7 +58,7 @@ class Config
      *
      * @param string $root
      */
-    public function load(string $root)
+    public function load(string $root): void
     {
         // Подключаем описание данных для БД
         /** @noinspection PhpIncludeInspection */
@@ -74,7 +74,7 @@ class Config
      *
      * @param array $arr Массив значений для импорта
      */
-    public function import(array $arr)
+    public function import(array $arr): void
     {
         // Проверяем, не объявлены ли переменные из импортируемого массива в этом классе
         foreach ($arr as $k => $v) {
