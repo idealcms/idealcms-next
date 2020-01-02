@@ -7,7 +7,6 @@
  */
 namespace Ideal\Core;
 
-use Exception;
 use Relay\Runner;
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\ServerRequest;
@@ -25,7 +24,6 @@ class FrontController
      * Проводится роутинг, определяется контроллер страницы и отображаемый текст.
      * Выводятся HTTP-заголовки и отображается текст, сгенерированный с помощью view в controller
      * @param string $webRoot
-     * @throws Exception
      */
     public function run(string $webRoot): void
     {
@@ -35,11 +33,8 @@ class FrontController
         // Определяем путь к файлу с переопределением зависимостей
         $definitions = stream_resolve_include_path($root . '/app/config/di.php');
 
-        // todo разделение окружений на developer и production и включение кэша для production
-        $cache = '';
-
         // Инициализируем контейнер и конфигуратор
-        $di = Di::getInstance($definitions, $cache);
+        $di = Di::getInstance($definitions);
 
         // Получаем объект конфигурации
         /** @var Config $config */
