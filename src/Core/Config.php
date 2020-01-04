@@ -13,6 +13,7 @@ namespace Ideal\Core;
  * @property string cmsFolder Название папки с CMS
  * @property string startUrl Начальная папка CMS
  * @property array middleware Очередь middleware
+ * @property array structures Список используемых структур проекта
  */
 class Config
 {
@@ -86,4 +87,22 @@ class Config
         // Объединяем импортируемый массив с основным массивом переменных конфига
         $this->array = array_merge($this->array, $arr);
     }
+
+    /**
+     * Из списка подключённых структур находит стартовую по наличию заполненного параметра startName
+     *
+     * @return array Массив стартовой структуры
+     * @throws \Exception
+     */
+    public function getStartStructure(): array
+    {
+        foreach ($this->structures as $structure) {
+            if (!empty($structure['startName'])) {
+                return $structure;
+            }
+        }
+        // Уведомление об ошибке, если нет структуры с startName
+        throw new \Exception('Нет первой структуры');
+    }
+
 }

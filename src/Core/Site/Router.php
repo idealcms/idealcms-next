@@ -7,6 +7,8 @@
  */
 namespace Ideal\Core\Site;
 
+use Ideal\Core\Di;
+use Ideal\Structure\Home\Site\Router as HomeRouter;
 use Relay\Runner;
 use Laminas\Diactoros\ServerRequest;
 use Laminas\Diactoros\Response;
@@ -18,11 +20,21 @@ class Router
      * @param Response $response
      * @param Runner $next
      * @return Response
+     * @throws \Exception
      */
-    public function __invoke(ServerRequest $request, Response $response, $next): Response
+    public function __invoke(ServerRequest $request, Response $response, Runner $next): Response
     {
-        // Write to the response body:
-        $response->getBody()->write("site content\n");
+        $di = Di::getInstance();
+
+        // Определяем контроллер для запуска
+        /** @var HomeRouter $homeRouter */
+        $homeRouter = $di->create(HomeRouter::class, $request, $response);
+
+        // Определяем нужный контроллер на основании запроса
+        $controller = $homeRouter->getController();
+
+        // Запускаем в работу контроллер структуры
+        $response = $controller->run($response);
 
         /** @var Response $response */
         $response = $next($request, $response); // вызов следующего middleware в очереди

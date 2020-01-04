@@ -60,27 +60,29 @@ class Di
      * Создание объекта на основе списка переопределений
      *
      * @param string $name Название класса
+     * @param array $args
      * @return object Созданный объект
      */
-    public function create(string $name): object
+    public function create(string $name, ...$args): object
     {
         // Проверяем, нет ли класса в списке переопределений
         $name = $this->definitions[$name] ?? $name;
 
-        return new $name();
+        return new $name(...$args);
     }
 
     /**
      * Создание и сохранение объекта на основе списка переопределений
      *
      * @param string $name Название класса
+     * @param array $args
      * @return object Созданный объект
      */
-    public function get(string $name): object
+    public function get(string $name, ...$args): object
     {
         // Проверяем, нет ли класса в списке переопределений
         $name = $this->definitions[$name] ?? $name;
-        $object = $this->created[$name] ?? new $name();
+        $object = $this->created[$name] ?? new $name(...$args);
         $this->created[$name] = $object;
 
         return $object;

@@ -18,6 +18,7 @@
     ],
     "require": {
         "php" : "^7.3",
+        "ext-mbstring": "*",
         "laminas/laminas-diactoros": "^2.2",
         "relay/relay": "~2.0"
     },
