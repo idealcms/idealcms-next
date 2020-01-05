@@ -25,8 +25,10 @@
 На период разработки установка с помощью Composer производится командой
 
 ``` bash
-$ composer require idealcms/idealcms dev-master
+$ composer create-project idealcms/installer <MYPROJECT> -s dev --remove-vcs
 ```
+
+где, <MYPROJECT> -- название папки в которой будет находиться новый проект.
 
 ## Использование
 
