@@ -31,15 +31,8 @@ class FrontController
         // Определяем корневую папку всей системы
         $root = stream_resolve_include_path($webRoot . '/../');
 
-        // Определяем путь к файлу с переопределением зависимостей
-        $definitions = stream_resolve_include_path($root . '/app/config/di.php');
-
-        // Инициализируем контейнер и конфигуратор
-        $di = Di::getInstance($definitions);
-
         // Получаем объект конфигурации
-        /** @var Config $config */
-        $config = $di->get(Config::class);
+        $config = Config::getInstance();
         // Загружаем список структур из конфигурационных файлов структур
         $config->load($root);
 

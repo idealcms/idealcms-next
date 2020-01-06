@@ -7,18 +7,42 @@
  */
 namespace Ideal\Core;
 
+use RuntimeException;
+
 /**
  * Класс конфигурации, в котором хранятся все конфигурационные данные CMS
  * @property array db Массив с настройками подключения к БД
  * @property string cmsFolder Название папки с CMS
  * @property string startUrl Начальная папка CMS
  * @property array middleware Очередь middleware
+ * @property array definitions Список замен для классов
  * @property array structures Список используемых структур проекта
  */
 class Config
 {
+    /** @var object Необходима для реализации паттерна Singleton */
+    private static $instance;
+
     /** @var array Содержит все конфигурационные переменные проекта */
     private $array = [];
+
+    /** @var array Хранилище созданных объектов */
+    protected $created = [];
+
+    /**
+     * Статический метод, возвращающий находящийся в нём динамический объект
+     *
+     * Этот метод реализует паттерн Singleton.
+     *
+     * @return Config
+     */
+    public static function getInstance(): Config
+    {
+        if (empty(self::$instance)) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
 
     /**
      * Возвращающает по запросу $config->varName переменную varName из массива $this->array
@@ -92,7 +116,6 @@ class Config
      * Из списка подключённых структур находит стартовую по наличию заполненного параметра startName
      *
      * @return array Массив стартовой структуры
-     * @throws \Exception
      */
     public function getStartStructure(): array
     {
@@ -102,7 +125,49 @@ class Config
             }
         }
         // Уведомление об ошибке, если нет структуры с startName
-        throw new \Exception('Нет первой структуры');
+        throw new RuntimeException('Нет первой структуры');
     }
 
+    /**
+     * Создание объекта на основе списка переопределений
+     *
+     * @param string $name Название класса
+     * @param array $args
+     * @return object Созданный объект
+     */
+    public function create(string $name, ...$args): object
+    {
+        // Проверяем, нет ли класса в списке переопределений
+        $name = $this->definitions[$name] ?? $name;
+
+        return new $name(...$args);
+    }
+
+    /**
+     * Создание и сохранение объекта на основе списка переопределений
+     *
+     * @param string $name Название класса
+     * @param array $args
+     * @return object Созданный объект
+     */
+    public function get(string $name, ...$args): object
+    {
+        // Проверяем, нет ли класса в списке переопределений
+        $name = $this->definitions[$name] ?? $name;
+        $object = $this->created[$name] ?? new $name(...$args);
+        $this->created[$name] = $object;
+
+        return $object;
+    }
+
+    /**
+     * Установка подмены определённого класса
+     *
+     * @param string $name Имя подменяемого класса
+     * @param string $substitute Имя класса-заместителя
+     */
+    public function set(string $name, string $substitute): void
+    {
+        $this->definitions[$name] = $substitute;
+    }
 }

@@ -8,7 +8,7 @@
 namespace Ideal\Core\Admin;
 
 use Exception;
-use Ideal\Core\Di;
+use Ideal\Core\Config;
 use Laminas\Diactoros\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -25,8 +25,7 @@ class Router implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $di = Di::getInstance();
-        $config = $di->get(Config::class);
+        $config = Config::getInstance();
 
         // Получаем запрошенный url
         $uri = $request->getUri();

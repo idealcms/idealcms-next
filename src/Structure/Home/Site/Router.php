@@ -9,7 +9,6 @@ namespace Ideal\Structure\Home\Site;
 
 
 use Ideal\Core\Config;
-use Ideal\Core\Di;
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\ServerRequest;
 
@@ -72,10 +71,8 @@ class Router extends \Ideal\Core\Site\Router
      */
     public function detectPageByUrl($path, $url): \Ideal\Core\Site\Model
     {
-        $di = Di::getInstance();
+        $config = Config::getInstance();
 
-        /** @var Config $config */
-        $config = $di->get(Config::class);
         $structure = $config->getStartStructure();
         $model = new $structure['model']();
 

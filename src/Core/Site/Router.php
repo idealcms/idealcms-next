@@ -8,7 +8,7 @@
 namespace Ideal\Core\Site;
 
 use Exception;
-use Ideal\Core\Di;
+use Ideal\Core\Config;
 use Ideal\Structure\Home\Site\Router as HomeRouter;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -28,11 +28,11 @@ class Router implements MiddlewareInterface
         // Вызов следующего middleware в очереди
         $response = $handler->handle($request);
 
-        $di = Di::getInstance();
+        $config = Config::getInstance();
 
         // Определяем контроллер для запуска
         /** @var HomeRouter $homeRouter */
-        $homeRouter = $di->create(HomeRouter::class, $request, $response);
+        $homeRouter = $config->create(HomeRouter::class, $request, $response);
 
         // Определяем нужный контроллер на основании запроса
         $controller = $homeRouter->getController();
