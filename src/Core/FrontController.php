@@ -7,10 +7,11 @@
  */
 namespace Ideal\Core;
 
-use Relay\Runner;
+use Relay\Relay;
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\ServerRequest;
 use Laminas\Diactoros\ServerRequestFactory;
+use Relay\Runner;
 
 /**
  * Front Controller реализует обработку HTTP-запросов в соответствии со стандартом PSR-7
@@ -48,11 +49,17 @@ class FrontController
 
         // Запускаем обработку очереди middleware
         $resolver = static function ($class) {
+            if ($class === false) {
+                // Обработчик для конца очереди, возвращающий чистый Response
+                return function (ServerRequest $request, Runner $runner) {
+                    return new Response();
+                };
+            }
             return new $class();
         };
 
-        $runner = new Runner($config->middleware, $resolver);
-        $response = $runner($request, $response);
+        $relay = new Relay($config->middleware, $resolver);
+        $response = $relay->handle($request);
 
         // Выводим в браузер полученный ответ сервера
         http_response_code($response->getStatusCode()); // $response->getReasonPhrase()

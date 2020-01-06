@@ -7,23 +7,27 @@
  */
 namespace Ideal\Core\Site;
 
+use Exception;
 use Ideal\Core\Di;
 use Ideal\Structure\Home\Site\Router as HomeRouter;
-use Relay\Runner;
-use Laminas\Diactoros\ServerRequest;
-use Laminas\Diactoros\Response;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class Router
+class Router implements MiddlewareInterface
 {
     /**
-     * @param ServerRequest $request
-     * @param Response $response
-     * @param Runner $next
-     * @return Response
-     * @throws \Exception
+     * @param ServerRequestInterface $request
+     * @param RequestHandlerInterface $handler
+     * @return ResponseInterface
+     * @throws Exception
      */
-    public function __invoke(ServerRequest $request, Response $response, Runner $next): Response
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        // Вызов следующего middleware в очереди
+        $response = $handler->handle($request);
+
         $di = Di::getInstance();
 
         // Определяем контроллер для запуска
@@ -35,9 +39,6 @@ class Router
 
         // Запускаем в работу контроллер структуры
         $response = $controller->run($response);
-
-        /** @var Response $response */
-        $response = $next($request, $response); // вызов следующего middleware в очереди
 
         return $response;
     }

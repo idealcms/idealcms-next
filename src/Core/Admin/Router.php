@@ -7,14 +7,23 @@
  */
 namespace Ideal\Core\Admin;
 
-use Ideal\Core\Config;
+use Exception;
 use Ideal\Core\Di;
 use Laminas\Diactoros\Response;
-use Laminas\Diactoros\ServerRequest;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class Router
+class Router implements MiddlewareInterface
 {
-    public function __invoke(ServerRequest $request, Response $response, $next): Response
+    /**
+     * @param ServerRequestInterface $request
+     * @param RequestHandlerInterface $handler
+     * @return ResponseInterface
+     * @throws Exception
+     */
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $di = Di::getInstance();
         $config = $di->get(Config::class);
@@ -23,12 +32,13 @@ class Router
         $uri = $request->getUri();
         $path = $uri->getPath();
 
-        if (strpos($path, $config->cmsFolder) === 0) {
+        if (strpos($path, $config->adminFolder) === 0) {
             // Если запрошена админка
+            $response = new Response();
             $response->getBody()->write("admin content\n");
         } else {
             // Если запрошена не админка, то продолжаем обработку очереди middleware
-            $response = $next($request, $response);
+            $response = $handler->handle($request);
         }
 
         return $response;
