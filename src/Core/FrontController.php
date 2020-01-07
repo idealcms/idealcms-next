@@ -20,6 +20,31 @@ use Relay\Runner;
 class FrontController
 {
     /**
+     * Проводит общую настройку среды выполнения
+     */
+    public function __construct()
+    {
+        error_reporting(E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING); //| E_STRICT
+        setlocale(LC_ALL, 'ru_RU.UTF8');
+        mb_internal_encoding('UTF-8'); // наша кодировка всегда UTF-8
+
+        if (get_magic_quotes_gpc()) {
+            die('Включены magic_quotes! Отключите их в настройках хостинга, иначе система работать не будет.');
+        }
+
+        // Устанавливаем часовой пояс
+        if (function_exists('date_default_timezone_set')) {
+            date_default_timezone_set('Europe/Moscow');
+        }
+
+        // Устанавливаем обработчик обычных ошибок скриптов
+        set_error_handler('\Ideal\Core\Error::errorHandler');
+
+        // Устанавливаем обработчик завершения скрипта
+        register_shutdown_function('\Ideal\Core\Error::shutdownFunction');
+    }
+
+    /**
      * Запуск FrontController'а
      *
      * Проводится роутинг, определяется контроллер страницы и отображаемый текст.
@@ -38,13 +63,12 @@ class FrontController
 
         // Инициализируем начальные $request, $response
         $request = $this->getRequest();
-        $response = new Response();
 
         // Запускаем обработку очереди middleware
         $resolver = static function ($class) {
             if ($class === false) {
                 // Обработчик для конца очереди, возвращающий чистый Response
-                return function (ServerRequest $request, Runner $runner) {
+                return static function (ServerRequest $request, Runner $runner) {
                     return new Response();
                 };
             }

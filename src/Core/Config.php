@@ -12,8 +12,12 @@ use RuntimeException;
 /**
  * Класс конфигурации, в котором хранятся все конфигурационные данные CMS
  * @property array db Массив с настройками подключения к БД
- * @property string cmsFolder Название папки с CMS
+ * @property string adminFolder Название папки с CMS
  * @property string startUrl Начальная папка CMS
+ * @property string domain Домен сайта
+ * @property string robotEmail Почтовый ящик, с которого будут приходить письма с сайта
+ * @property array cms Блок параметров CMS
+ * @property array cache Блок параметров кэширования
  * @property array middleware Очередь middleware
  * @property array definitions Список замен для классов
  * @property array structures Список используемых структур проекта
@@ -28,6 +32,9 @@ class Config
 
     /** @var array Хранилище созданных объектов */
     protected $created = [];
+
+    /** @var string Путь к папке с временными файлами */
+    protected $tmpFolder = '';
 
     /**
      * Статический метод, возвращающий находящийся в нём динамический объект
@@ -169,5 +176,25 @@ class Config
     public function set(string $name, string $substitute): void
     {
         $this->definitions[$name] = $substitute;
+    }
+
+    /**
+     * Получение полного пути к папке для хранения временных файлов
+     *
+     * @return string
+     */
+    public function getTmpFolder(): string
+    {
+        if (empty($this->tmpFolder)) {
+            // todo получение папки временных файлов при запуске из консоли
+            $this->tmpFolder = dirname($_SERVER['DOCUMENT_ROOT']) . $this->cms['tmpFolder'];
+            if (!is_dir($this->tmpFolder)) {
+                if (!mkdir($this->tmpFolder) && !is_dir($this->tmpFolder)) {
+                    throw new \RuntimeException(sprintf('Directory "%s" was not created', $this->tmpFolder));
+                }
+            }
+        }
+
+        return $this->tmpFolder;
     }
 }

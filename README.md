@@ -12,7 +12,7 @@
 * PHP 7.3+,
 * MySQL 4+, 
 * MVC, 
-* PSR-0, PSR-2, PSR-7
+* PSR-0, PSR-12, PSR-7, PSR-15
 * Twig, 
 * jQuery,
 * Twitter Bootstrap 3,
@@ -28,7 +28,7 @@
 $ composer create-project idealcms/installer <MYPROJECT> -s dev --remove-vcs
 ```
 
-где, <MYPROJECT> -- название папки в которой будет находиться новый проект.
+где, &lt;MYPROJECT> — название папки в которой будет находиться новый проект.
 
 ## Использование
 

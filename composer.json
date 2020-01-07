@@ -19,6 +19,8 @@
     "require": {
         "php": "^7.3",
         "ext-mbstring": "*",
+        "firephp/firephp-core": "^0.5.2",
+        "idealcms/mailer": "^5.0",
         "laminas/laminas-diactoros": "^2.2",
         "relay/relay": "2.x-dev",
         "twig/twig": "^3.0"
