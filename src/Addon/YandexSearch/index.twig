@@ -1,0 +1,38 @@
+<form accept-charset="UTF-8" id="search-form" method="get" action="" class="search-form">
+    <input type="text" class="form-text" maxlength="255" size="40" value="{{ query }}" name="query" id="query">
+    <input type="submit" class="form-submit" value="Найти" id="edit-submit">
+</form>
+
+{% if message != '' %}
+    <p>{{ message }}</p>
+{% endif %}
+
+{% if parts|length > 0 %}
+    <p>Найдено страниц: {{ total }}</p>
+    {% for part in parts %}
+        <p>
+            <strong>
+                <a href="{{ part.url }}">{{ part.title|raw }}</a>
+            </strong>
+            <br />
+                {% for passage in part.passages %}
+                    {{ passage | raw }}
+                    <br />
+                {% endfor %}
+        </p>
+    {% endfor %}
+{% endif %}
+
+{% if pager.pages|length > 1 %}
+    <div class="pagination pagination-left">
+        <ul class="paging">
+            {% for page in pager.pages %}
+                {% if page.current == 1 %}
+                    <li class="active">{{ page.num }}</li>
+                {% else %}
+                    <li><a href="{{ page.url }}">{{ page.num }}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}

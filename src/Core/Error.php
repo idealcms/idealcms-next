@@ -2,7 +2,7 @@
 /**
  * Ideal CMS (https://idealcms.ru/)
  * @link      https://github.com/idealcms/idealcms репозиторий исходного кода
- * @copyright Copyright (c) 2012-2020 Ideal CMS (http://idealcms.ru)
+ * @copyright Copyright (c) 2012-2020 Ideal CMS (https://idealcms.ru)
  * @license   https://idealcms.ru/license.html LGPL v3
  */
 namespace Ideal\Core;
@@ -18,7 +18,7 @@ use Ideal\Mailer;
 class Error
 {
     /** @var array Массив для хранения списка ошибок, возникших при выполнении скрипта */
-    public static $errorArray = array();
+    public static $errorArray = [];
 
     /**
      * Вывод сообщения об ошибке
@@ -91,7 +91,7 @@ class Error
     public static function shutDown(): void
     {
         $error = error_get_last();
-        $errors = array(E_ERROR, E_PARSE, E_CORE_ERROR, E_CORE_WARNING, E_COMPILE_ERROR, E_COMPILE_WARNING);
+        $errors = [E_ERROR, E_PARSE, E_CORE_ERROR, E_CORE_WARNING, E_COMPILE_ERROR, E_COMPILE_WARNING];
 
         if (in_array($error['type'], $errors, true)) {
             $errorStr = 'Ошибка ' . $error['message'] . ', в строке ' . $error['line'] . ' файла ' . $error['file'];

@@ -74,7 +74,8 @@ class Router extends \Ideal\Core\Site\Router
         $config = Config::getInstance();
 
         $structure = $config->getStartStructure();
-        $model = new $structure['model']();
+        $structureClass = $config->getClassName($structure['structure'], 'Structure', 'Site\\Model');
+        $model = new $structureClass();
 
         return $model;
     }

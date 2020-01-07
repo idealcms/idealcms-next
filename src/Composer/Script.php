@@ -7,7 +7,11 @@
  */
 namespace Ideal\Composer;
 
+use Composer\IO\IOInterface;
 use \Composer\Script\Event;
+use Ideal\Core\Config;
+use Ideal\Core\Db;
+use Ideal\Core\FrontController;
 
 class Script
 {
@@ -18,7 +22,9 @@ class Script
      */
     public static function postCreateProject(Event $event): void
     {
-        $composer = $event->getComposer();
+        $vendorDir = realpath($event->getComposer()->getConfig()->get('vendor-dir'));
+        self::dbUpdate($vendorDir);
+        return;
 
         $io = $event->getIO();
 
@@ -32,7 +38,7 @@ class Script
 
         // Вносим правки в файлы конфигурации
         $vendorDir = realpath($event->getComposer()->getConfig()->get('vendor-dir'));
-        $projectDir = realpath($vendorDir . '/..');
+        $projectDir = dirname($vendorDir);
 
         $configFile = $projectDir . '/app/config/config.php';
         $config = file_get_contents($configFile);
@@ -74,17 +80,20 @@ class Script
         $htaccess = str_replace('[[DOMAIN]]', $domain, $htaccess);
         file_put_contents($htaccessFile, $htaccess);
 
+        self::dbUpdate($vendorDir);
+
         echo 'Success!';
     }
 
     /**
+     * Отображение приглашения и ождание ввода в консоли
      *
-     * @param $io
-     * @param $prompt
-     * @param string $default
-     * @return string
+     * @param IOInterface $io
+     * @param string $prompt Текст приглашения
+     * @param string $default Значение по умолчанию (если нужно)
+     * @return string Результат ввода пользователя
      */
-    protected static function input($io, $prompt, $default = ''): string
+    protected static function input(IOInterface $io, string $prompt, string $default = ''): string
     {
         do {
             $domain = $io->ask($prompt);
@@ -93,5 +102,41 @@ class Script
         $domain = $domain ?? $default;
 
         return $domain;
+    }
+
+    protected static function dbUpdate(string $vendorDir): string
+    {
+        require_once $vendorDir . '/autoload.php';
+
+        // Инициализируем фронт контроллер, после чего нам доступна вся конфигурация системы
+        $projectDir = dirname($vendorDir);
+        $page = new FrontController($projectDir . '/www');
+
+        $config = Config::getInstance();
+        $db = Db::getInstance();
+
+        // Создание таблиц аддонов в БД
+        $addonDir = $vendorDir . '/idealcms/idealcms/src/Addon';
+        if ($handle = opendir($addonDir)) {
+            while (false !== ($file = readdir($handle))) {
+                if ($file != '.' && $file != '..') {
+                    if (is_dir($addonDir . '/' . $file)) {
+                        $table = $config->db['prefix'] . 'ideal_addon_' . strtolower($file);
+                        $fields = require($addonDir . '/' . $file . '/config.php');
+                        $db->create($table, $fields['fields']);
+                    }
+                }
+            }
+        }
+
+        // Создание таблиц структур в БД
+        foreach ($config->structures as $structure) {
+            $class = $config->getClassName($structure['structure'], 'Structure', 'Install');
+            $install = new $class();
+            $install->do();
+            print $class . "\n";
+        }
+
+        return '';
     }
 }

@@ -21,8 +21,10 @@ class FrontController
 {
     /**
      * Проводит общую настройку среды выполнения
+     *
+     * @param string $webRoot Путь к публичной папке
      */
-    public function __construct()
+    public function __construct(string $webRoot)
     {
         error_reporting(E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING); //| E_STRICT
         setlocale(LC_ALL, 'ru_RU.UTF8');
@@ -42,17 +44,7 @@ class FrontController
 
         // Устанавливаем обработчик завершения скрипта
         register_shutdown_function('\Ideal\Core\Error::shutdownFunction');
-    }
 
-    /**
-     * Запуск FrontController'а
-     *
-     * Проводится роутинг, определяется контроллер страницы и отображаемый текст.
-     * Выводятся HTTP-заголовки и отображается текст, сгенерированный с помощью view в controller
-     * @param string $webRoot
-     */
-    public function run(string $webRoot): void
-    {
         // Определяем корневую папку всей системы
         $root = stream_resolve_include_path($webRoot . '/../');
 
@@ -60,7 +52,16 @@ class FrontController
         $config = Config::getInstance();
         // Загружаем список структур из конфигурационных файлов структур
         $config->load($root);
+    }
 
+    /**
+     * Запуск FrontController'а
+     *
+     * Проводится роутинг, определяется контроллер страницы и отображаемый текст.
+     * Выводятся HTTP-заголовки и отображается текст, сгенерированный с помощью view в controller
+     */
+    public function run(): void
+    {
         // Инициализируем начальные $request, $response
         $request = $this->getRequest();
 
@@ -75,6 +76,7 @@ class FrontController
             return new $class();
         };
 
+        $config = Config::getInstance();
         $relay = new Relay($config->middleware, $resolver);
         $response = $relay->handle($request);
 
