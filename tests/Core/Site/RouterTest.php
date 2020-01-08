@@ -10,7 +10,7 @@ class RouterTest extends TestCase
 
     public function testInvoke()
     {
-        $router = new Router();
+        $router = new Middleware();
         $response = new Response();
         $testResponse = new Response();
         $testResponse->getBody()->write("next response");

@@ -15,7 +15,7 @@ class RouterTest extends TestCase
         $config = $di->get(Config::class);
         $config->cmsFolder = '/strange';
 
-        $router = new Router();
+        $router = new Middleware();
         $response = new Response();
         $testResponse = new Response();
         $testResponse->getBody()->write("not admin");

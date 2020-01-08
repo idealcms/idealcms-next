@@ -327,4 +327,18 @@ class Config
 
         return $this->tmpFolder;
     }
+
+    /**
+     * Получение полного пути к корню системы
+     *
+     * @return string
+     */
+    public function getRootFolder(): string
+    {
+        if (empty($this->rootFolder)) {
+            $this->rootFolder = dirname($_SERVER['DOCUMENT_ROOT']);
+        }
+
+        return $this->rootFolder;
+    }
 }

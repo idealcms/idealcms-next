@@ -7,39 +7,58 @@
  */
 namespace Ideal\Core\Site;
 
-use Exception;
-use Ideal\Core\Config;
-use Ideal\Structure\Home\Site\Router as HomeRouter;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
-class Router implements MiddlewareInterface
+use Laminas\Diactoros\Response;
+use Laminas\Diactoros\ServerRequest;
+
+abstract class Router
 {
+    /** @var ServerRequest */
+    protected $request;
+
+    /** @var Response Изменяемый объект ответа */
+    protected $response;
+
+    /** @var Model Модель, определённая роутером */
+    protected $model;
+
     /**
-     * @param ServerRequestInterface $request
-     * @param RequestHandlerInterface $handler
-     * @return ResponseInterface
-     * @throws Exception
+     * Конструктор, инициализирующий в объекте Запрос и Ответ
+     *
+     * @param ServerRequest $request Объект http-запроса
+     * @param Response $response Объект http-ответа
      */
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    public function __construct(ServerRequest $request, Response $response)
     {
-        // Вызов следующего middleware в очереди
-        $response = $handler->handle($request);
+        $this->request = $request;
+        $this->response = $response;
+    }
 
-        $config = Config::getInstance();
+    /**
+     * Определение роутера для запрашиваемой страницы
+     *
+     * @param array $path Построенная часть пути к запрошенной странице
+     * @param array $url Неразобранная часть пути к запрошенной странице
+     * @return Router Определённый роутер
+     */
+    abstract public function route(array $path, array $url): self;
 
-        // Определяем контроллер для запуска
-        /** @var HomeRouter $homeRouter */
-        $homeRouter = $config->create(HomeRouter::class, $request, $response);
+    /**
+     * Инициализация контроллера для этого роутера
+     *
+     * @return \Ideal\Core\Site\Router
+     */
+    public function getController(): Controller
+    {
+        // Определяем класс контроллера по модели
+        $controllerClass = mb_ereg_replace('Model$', 'Controller', get_class($this->model));
 
-        // Определяем нужный контроллер на основании запроса
-        $controller = $homeRouter->getController();
+        /** @var Controller $controller Инициализируем контроллер соответствующей структуры */
+        $controller = new $controllerClass($this->request, $this->response);
 
-        // Запускаем в работу контроллер структуры
-        $response = $controller->run($response);
+        // Инициализируем контроллер
+        $controller->setModel($this->model);
 
-        return $response;
+        return $controller;
     }
 }

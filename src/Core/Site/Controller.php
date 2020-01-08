@@ -7,40 +7,62 @@
  */
 namespace Ideal\Core\Site;
 
+use Ideal\Core\Config;
+use Ideal\Core\View;
 use Laminas\Diactoros\Response;
+use Laminas\Diactoros\ServerRequest;
 
 class Controller
 {
-    /** @var string Действие */
-    protected $action;
-
     /** @var Model Модель с данными страницы */
     protected $model;
+
+    /** @var View */
+    protected $view;
+
+    /** @var ServerRequest Запрос, поступающий на вход контроллера */
+    protected $request;
+
+    /** @var Response Http-ответ контроллера */
+    protected $response;
+
+    /**
+     * Controller constructor.
+     * @param ServerRequest $request
+     * @param Response $response Исходный объект http-ответа
+     */
+    public function __construct(ServerRequest $request, Response $response)
+    {
+        $this->request = $request;
+        $this->response = $response;
+    }
 
     /**
      * Запуск контроллера для получения контента страницы
      *
-     * @param Response $response Исходный объект http-ответа
      * @return Response Модифицированный объект ответа
      */
-    public function run(Response $response): Response
+    public function run(): Response
     {
-        $content = 'Главная страница';
+        $config = Config::getInstance();
+        [$tplFolder, $tplName] = $this->model->getTemplate();
+        $folders = [$tplFolder, $config->getRootFolder() . '/app/views'];
+        $this->view = new View($folders, $config->cache['templateSite']);
+        $this->view->loadTemplate($tplName);
+
+        // Определяем и запускаем экшен
+        $query = $this->request->getQueryParams();
+        $action = $query['action'] ?? 'index';
+        $action .= 'Action';
+        $this->$action();
+
+        // Twig рендерит текст странички из шаблона
+        $text = $this->view->render();
 
         // Write to the response body:
-        $response->getBody()->write($content);
+        $this->response->getBody()->write($text);
 
-        return $response;
-    }
-
-    /**
-     * Установка экшена для контроллера
-     *
-     * @param string $action Название экшена
-     */
-    public function setAction($action): void
-    {
-        $this->action = $action;
+        return $this->response;
     }
 
     /**

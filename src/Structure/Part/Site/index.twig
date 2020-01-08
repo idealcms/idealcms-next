@@ -1,0 +1,17 @@
+{% extends "site.twig" %}
+
+{% block content %}
+
+    <h1>{{ header|raw }}</h1>
+
+    {# Выводим контент первого аддона #}
+    {{ addons.0.content|raw }}
+
+    {% if parts|length > 0 %}
+        <ul>
+            {% for part in parts %}
+                <li><a href="{{ part.link }}">{{ part.name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

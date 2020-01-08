@@ -10,4 +10,19 @@ namespace Ideal\Structure\Part\Site;
 
 class Router extends \Ideal\Core\Site\Router
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function route(array $path, array $url): \Ideal\Core\Site\Router
+    {
+        $this->path = $path;
+
+        // Определяем модель
+        $this->model = new Model();
+        $this->model->setPath($path);
+
+        // todo роутинг внутри структуры Part и переход на вложенные структуры
+
+        return $this;
+    }
 }

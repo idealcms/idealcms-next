@@ -7,7 +7,25 @@
  */
 namespace Ideal\Structure\Home\Site;
 
+use Laminas\Diactoros\Response;
+use Laminas\Diactoros\ServerRequest;
 
 class Controller extends \Ideal\Core\Site\Controller
 {
+    /**
+     * Действие по умолчанию - открытие главной страницы сайта
+     *
+     * @param ServerRequest $request
+     * @param Response $response
+     */
+    public function indexAction(ServerRequest $request, Response $response)
+    {
+        $this->view->header = 'Главная страница';
+        $pageData = $this->model->getPageData();
+
+        // Перенос данных страницы в шаблон
+        foreach ($pageData as $k => $v) {
+            $this->view->$k = $v;
+        }
+    }
 }

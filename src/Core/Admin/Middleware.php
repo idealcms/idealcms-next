@@ -15,7 +15,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class Router implements MiddlewareInterface
+class Middleware implements MiddlewareInterface
 {
     /**
      * @param ServerRequestInterface $request
