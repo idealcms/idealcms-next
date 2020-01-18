@@ -23,12 +23,11 @@ class Script
     public static function postCreateProject(Event $event): void
     {
         $vendorDir = realpath($event->getComposer()->getConfig()->get('vendor-dir'));
-        self::dbUpdate($vendorDir);
-        return;
 
         $io = $event->getIO();
 
         $domain = self::input($io, 'Domain name: ');
+        $publicFolder = self::input($io, 'Public folder [www]: ', 'www');
         $adminFolder = self::input($io, 'Admin folder: ');
         $dbHost = self::input($io, 'Database host [localhost]: ', 'localhost');
         $dbName = self::input($io, 'Database name: ');
@@ -43,6 +42,12 @@ class Script
         $configFile = $projectDir . '/app/config/config.php';
         $config = file_get_contents($configFile);
 
+        if ($publicFolder !== 'www') {
+            // Если нужно переименовать публичную папку
+            $publicFolder = trim($publicFolder, '/');
+            rename($projectDir . '/www', $projectDir . '/' . $publicFolder);
+        }
+
         $config = mb_ereg_replace(
             "'adminFolder' => '/admin',",
             "'adminFolder' => '/{$adminFolder}',",
@@ -50,37 +55,45 @@ class Script
             'z'
         );
         $config = mb_ereg_replace(
-            "'name' => getenv\('DB_HOST'\) \?: '(.*)',",
-            "'name' => getenv('DB_HOST') ?: '{$dbHost}',",
+            "'host' => getenv\('DB_HOST'\) \?: '(.*)',",
+            "'host' => getenv('DB_HOST') ?: '{$dbHost}',",
             $config,
             'z'
         );
         $config = mb_ereg_replace(
-            "'name' => getenv\('DB_LOGIN'\) \?: '(.*)',",
-            "'name' => getenv('DB_LOGIN') ?: '{$dbLogin}',",
+            "'login' => getenv\('DB_LOGIN'\) \?: '(.*)',",
+            "'login' => getenv('DB_LOGIN') ?: '{$dbLogin}',",
             $config,
             'z'
         );
         $config = mb_ereg_replace(
-            "'name' => getenv\('DB_PASSWORD'\) \?: '(.*)',",
-            "'name' => getenv('DB_PASSWORD') ?: '{$dbPassword}',",
+            "'password' => getenv\('DB_PASSWORD'\) \?: '(.*)',",
+            "'password' => getenv('DB_PASSWORD') ?: '{$dbPassword}',",
+            $config,
+            'z'
+        );
+        $config = mb_ereg_replace(
+            "'name' => getenv\('DB_NAME'\) \?: '(.*)',",
+            "'name' => getenv('DB_NAME') ?: '{$dbName}',",
             $config,
             'z'
         );
         $config = mb_ereg_replace(
             "'prefix' => 'i_'",
-            "'prefix' => '{$dbName}'",
+            "'prefix' => '{$dbPrefix}'",
             $config,
             'z'
         );
         file_put_contents($configFile, $config);
 
-        $htaccessFile = $projectDir . '/www/.htaccess';
+        // Вносим правки в файл .htaccess
+        $htaccessFile = $projectDir . '/' . $publicFolder . '/.htaccess';
         $htaccess = file_get_contents($htaccessFile);
         $htaccess = str_replace('[[DOMAIN]]', $domain, $htaccess);
         file_put_contents($htaccessFile, $htaccess);
 
-        self::dbUpdate($vendorDir);
+        // Заполняем БД начальными данными
+        self::dbUpdate($vendorDir, $publicFolder);
 
         echo 'Success!';
     }
@@ -104,13 +117,13 @@ class Script
         return $domain;
     }
 
-    protected static function dbUpdate(string $vendorDir): string
+    protected static function dbUpdate(string $vendorDir, string $publicFolder): string
     {
         require_once $vendorDir . '/autoload.php';
 
         // Инициализируем фронт контроллер, после чего нам доступна вся конфигурация системы
         $projectDir = dirname($vendorDir);
-        $page = new FrontController($projectDir . '/www');
+        $page = new FrontController($projectDir . '/' . $publicFolder);
 
         $config = Config::getInstance();
         $db = Db::getInstance();
