@@ -10,8 +10,6 @@
 // Страницы сайта
 return [
     'params' => [
-        'in_structures' => ['Ideal_Part'],
-        'structures' => ['Ideal_Part', 'Ideal_News'], // типы, которые можно создавать в этом разделе
         'elements_cms' => 10, // количество элементов в списке в CMS
         'elements_site' => 15, // количество элементов в списке на сайте
         'field_name' => 'name', // поля для вывода информации по объекту
