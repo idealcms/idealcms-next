@@ -14,11 +14,8 @@ class Controller extends \Ideal\Core\Site\Controller
 {
     /**
      * Действие по умолчанию - открытие запрошенной страницы структуры Part
-     *
-     * @param ServerRequest $request
-     * @param Response $response
      */
-    public function indexAction(ServerRequest $request, Response $response)
+    public function indexAction()
     {
         $this->view->header = 'Внутренняя страница';
     }

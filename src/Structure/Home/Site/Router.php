@@ -24,9 +24,9 @@ class Router extends \Ideal\Core\Site\Router
 
         if (empty($url)) {
             // Запрошена главная страница, инициализируем модель
-            $model = new Model();
-            $model->setPath($this->path);
-            $model->setPageByUrl('/');
+            $this->model = new Model();
+            $this->model->setPath($this->path);
+            $this->model->setPageByUrl('/');
 
             return $this;
         }
