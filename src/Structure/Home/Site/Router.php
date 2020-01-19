@@ -20,12 +20,10 @@ class Router extends \Ideal\Core\Site\Router
      */
     public function route(array $path, array $url): \Ideal\Core\Site\Router
     {
-        $this->path = $path;
-
         if (empty($url)) {
             // Запрошена главная страница, инициализируем модель
             $this->model = new Model();
-            $this->model->setPath($this->path);
+            $this->model->setPath($path);
             $this->model->setPageByUrl('/');
 
             return $this;

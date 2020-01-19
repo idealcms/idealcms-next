@@ -260,7 +260,7 @@ class Config
      */
     public function set(string $name, string $substitute): void
     {
-        $this->definitions[$name] = $substitute;
+        $this->array['definitions'][$name] = $substitute;
     }
 
     /**

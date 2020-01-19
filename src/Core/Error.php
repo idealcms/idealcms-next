@@ -71,7 +71,7 @@ class Error
                 try {
                     FB::error($trace);
                 } catch (Exception $e) {
-                    die('FireBug don`t work');
+                    die('FireBug don`t work: ' . $txt);
                 }
                 break;
 
