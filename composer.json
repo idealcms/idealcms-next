@@ -22,8 +22,12 @@
         "ext-mysqli": "*",
         "ext-json": "*",
         "firephp/firephp-core": "^0.5.2",
+        "harvesthq/chosen": "^1.8",
         "idealcms/mailer": "^5.0",
         "laminas/laminas-diactoros": "^2.2",
+        "npm-asset/bootstrap": "^4.4",
+        "npm-asset/jquery": "^3.0",
+        "npm-asset/tempusdominus-bootstrap-4": "^5.1",
         "relay/relay": "2.x-dev",
         "twig/twig": "^3.0"
     },
@@ -49,6 +53,12 @@
     "config": {
         "sort-packages": true
     },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
     "scripts": {
         "test": "phpunit",
         "check-style": "phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src",
