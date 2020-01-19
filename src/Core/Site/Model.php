@@ -28,16 +28,22 @@ class Model
      */
     public function getTemplate()
     {
+        // Определяем файл шаблона
         $config = Config::getInstance();
         $rootFolder = $config->getRootFolder();
         $class = explode('\\', get_class($this));
-        // todo сделать получение названия шаблона из соответствующего поля модели
-        $template = [
-            $rootFolder . '/vendor/idealcms/idealcms/src/Structure/' . $class[2]. '/Site',
-            'index.twig'
-        ];
+        $places = ['/src/Ideal', '/vendor/idealcms/idealcms/src', '/src']; // todo определение папки для модулей
+        $file = 'index.twig'; // todo сделать получение названия шаблона из соответствующего поля модели
 
-        return $template;
+        // Ищем, какой файл шаблона взять (кастомизированный, из вендора, или из корневой src [в тестовом окружении])
+        foreach ($places as $place) {
+            $templateFile = $rootFolder . $place . '/Structure/' . $class[2]. '/Site/' . $file;
+            if (file_exists($templateFile)) {
+                break;
+            }
+        }
+
+        return [dirname($templateFile), basename($templateFile)];
     }
 
     /**
