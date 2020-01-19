@@ -1,20 +1,21 @@
 <?php
 namespace Ideal\Test;
 
-use Ideal\Core\Di;
+use Ideal\Core\Config;
 use Ideal\Core\FrontController;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 class FrontControllerTest extends TestCase
 {
     public function testRun(): void
     {
-        $di = Di::getInstance();
-        $di->set('Ideal\Core\Config', 'Ideal\Test\TestConfig');
-
         ob_start();
-        $fc = new TestFrontController();
-        $fc->run('');
+        $fc = new TestFrontController(dirname(__DIR__));
+        $fc->run();
         $print = ob_get_clean();
 
         $this->assertStringContainsString('class1 start ', $print);
@@ -28,48 +29,38 @@ class TestFrontController extends FrontController
 {
     protected function getRequest(): \Laminas\Diactoros\ServerRequest
     {
-        $request = (new \Laminas\Diactoros\ServerRequest())
+        $request = (new \Laminas\Diactoros\ServerRequest(['REQUEST_URI' => '/']))
             ->withUri(new \Laminas\Diactoros\Uri('http://example.com/'))
             ->withMethod('GET');
 
         return $request;
     }
+
+    protected function load($root): Config
+    {
+        $config = Config::getInstance();
+        $config->middleware = ['\\Ideal\\Test\\Class1', '\\Ideal\\Test\\Class2'];
+        return $config;
+    }
 }
 
-class TestConfig extends \Ideal\Core\Config
+class Class1 implements MiddlewareInterface
 {
-    public function __get(string $name)
-    {
-        $value = parent::__get($name);
-        if ($name === 'middleware') {
-            $value = ['\Ideal\Test\Class1', '\Ideal\Test\Class2'];
-        }
-        return $value;
-    }
-
-    public function load(string $root): void
-    {
-    }
-
-}
-
-class Class1
-{
-    public function __invoke($request, $response, $next)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         print 'class1 start ';
-        $response = $next($request, $response);
+        $response = $handler->handle($request);
         print 'class1 end ';
         return $response;
     }
 }
 
-class Class2
+class Class2 implements MiddlewareInterface
 {
-    public function __invoke($request, $response, $next)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         print 'class2 start ';
-        $response = $next($request, $response);
+        $response = $handler->handle($request);
         print 'class2 end ';
         return $response;
     }

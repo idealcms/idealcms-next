@@ -48,10 +48,8 @@ class FrontController
         // Определяем корневую папку всей системы
         $root = stream_resolve_include_path($webRoot . '/../');
 
-        // Получаем объект конфигурации
-        $config = Config::getInstance();
-        // Загружаем список структур из конфигурационных файлов структур
-        $config->load($root);
+        // Загружаем данные из конфигов
+        $this->load($root);
     }
 
     /**
@@ -96,5 +94,19 @@ class FrontController
     protected function getRequest(): ServerRequest
     {
         return ServerRequestFactory::fromGlobals();
+    }
+
+    /**
+     * Метод для возможности переопределения конфига
+     * @param $root
+     */
+    protected function load($root): Config
+    {
+        // Получаем объект конфигурации
+        $config = Config::getInstance();
+        // Загружаем конфигурационные данные
+        $config->load($root);
+
+        return $config;
     }
 }
